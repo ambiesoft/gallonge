@@ -8,7 +8,7 @@ class Allonge : public QWidget
     Q_OBJECT
 public:
     explicit Allonge(QWidget *parent = nullptr);
-
+    ~Allonge();
 protected:
     void mouseMoveEvent(QMouseEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;

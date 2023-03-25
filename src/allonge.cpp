@@ -14,6 +14,12 @@ Allonge::Allonge(QWidget *parent)
     // need sizeGrip
     //　https://stackoverflow.com/questions/62807295/how-to-resize-a-window-from-the-edges-after-adding-the-property-qtcore-qt-framel
 }
+
+Allonge::~Allonge()
+{
+
+}
+
 void Allonge::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {

@@ -20,8 +20,11 @@ public:
 private slots:
     void on_pushButton_clicked();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private:
     Ui::MainWindow *ui;
-    std::map<QString, Allonge*> allonges_;
+    std::map<quint32, Allonge*> allonges_;
 };
 #endif // MAINWINDOW_H
