@@ -1,4 +1,5 @@
 #include <QMouseEvent>
+#include <QStatusBar>
 
 #include "allonge.h"
 
@@ -9,6 +10,9 @@ Allonge::Allonge(QWidget *parent)
     // setWindowFlags(Qt::CustomizeWindowHint);// | Qt::FramelessWindowHint);
     setWindowFlags(Qt::FramelessWindowHint);
     setStyleSheet("background-color: red");
+
+    // need sizeGrip
+    //　https://stackoverflow.com/questions/62807295/how-to-resize-a-window-from-the-edges-after-adding-the-property-qtcore-qt-framel
 }
 void Allonge::mousePressEvent(QMouseEvent *event)
 {
