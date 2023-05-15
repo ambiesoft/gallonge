@@ -3,6 +3,9 @@
 #include <QDesktopServices>
 #include <QOAuthHttpServerReplyHandler>
 #include <QNetworkReply>
+#include <QUuid>
+#include <QAbstractOAuth>
+#include <QVariantMap>
 
 #include "../../gallonge_secret/googleid.h"
 
@@ -54,14 +57,34 @@ void MainWindow::closeEvent(QCloseEvent *event)
 void MainWindow::on_pushButton_2_clicked()
 {
     this->google = new QOAuth2AuthorizationCodeFlow(this);
-    this->google->setScope("email");
+    this->google->setScope("openid profile");
 
     connect(this->google, &QOAuth2AuthorizationCodeFlow::authorizeWithBrowser, &QDesktopServices::openUrl);
 
-    this->google->setAuthorizationUrl(QUrl("https://accounts.google.com/o/oauth2/auth"));
+//    this->google->setAuthorizationUrl(QUrl("https://accounts.google.com/o/oauth2/auth"));
+    this->google->setAuthorizationUrl(QUrl("https://accounts.google.com/o/oauth2/v2/auth"));
     this->google->setClientIdentifier(CLIENT_ID);
-    this->google->setAccessTokenUrl(QUrl("https://oauth2.googleapis.com/token"));
+//    this->google->setAccessTokenUrl(QUrl("https://oauth2.googleapis.com/token"));
+    this->google->setAccessTokenUrl(QUrl("https://www.googleapis.com/oauth2/v4/token"));
     this->google->setClientIdentifierSharedKey(CLIENT_SECRET);
+    auto code_verifier = (QUuid::createUuid().toString(QUuid::WithoutBraces) +
+                          QUuid::createUuid().toString(QUuid::WithoutBraces)).toLatin1(); // 43 <= length <= 128
+    auto code_challenge = QCryptographicHash::hash(code_verifier, QCryptographicHash::Sha256).toBase64(
+        QByteArray::Base64UrlEncoding | QByteArray::OmitTrailingEquals);
+
+    this->google->setModifyParametersFunction([=](QAbstractOAuth::Stage stage, QMultiMap<QString, QVariant>* params)
+                                         {
+                                             switch (stage)
+                                             {
+                                             case QAbstractOAuth::Stage::RequestingAuthorization:
+                                                 params->insert("code_challenge", code_challenge);
+                                                 params->insert("code_challenge_method", "S256");
+                                                 break;
+                                             case QAbstractOAuth::Stage::RequestingAccessToken:
+                                                 params->insert("code_verifier", code_verifier);
+                                                 break;
+                                             }
+                                         });
 
     // In my case, I have hardcoded 5476 to test
     auto replyHandler = new QOAuthHttpServerReplyHandler(5476, this);
