@@ -4,6 +4,8 @@
 #include <QOAuthHttpServerReplyHandler>
 #include <QNetworkReply>
 
+#include "../../gallonge_secret/googleid.h"
+
 #include "mainwindow.h"
 #include "allonge.h"
 #include "./ui_mainwindow.h"
@@ -51,12 +53,6 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::on_pushButton_2_clicked()
 {
-//    const QString CLIENT_ID = "765500671831-oratm01eg6smpf9hvvenkaodn8jvko8m.apps.googleusercontent.com";
-//    const QString CLIENT_SECRET = "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";
-
-    const QString CLIENT_ID = "765500671831-vdna23a7uens3deg33qrccck899g4afr.apps.googleusercontent.com";
-    const QString CLIENT_SECRET = "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";
-
     this->google = new QOAuth2AuthorizationCodeFlow(this);
     this->google->setScope("email");
 

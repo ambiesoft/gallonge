@@ -27,6 +27,7 @@ set(PROJECT_SOURCES
         mainwindow.ui
         allonge.h
         allonge.cpp
+        ../../gallonge_secret/googleid.h
         ${TS_FILES}
 )
 
